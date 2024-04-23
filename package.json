@@ -1,10 +1,11 @@
 {
   "type": "module",
   "scripts": {
-    "dev": "nodemon --watch src src/index.ts",
+    "dev": "nodemon --watch src index.ts",
     "build": "tsc -p tsconfig.json"
   },
   "dependencies": {
+    "@fastify/static": "^7.0.3",
     "fastify": "^4.26.2"
   },
   "devDependencies": {
