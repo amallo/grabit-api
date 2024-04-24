@@ -8,6 +8,7 @@
   "dependencies": {
     "@fastify/static": "^7.0.3",
     "fastify": "^4.26.2",
+    "fp-ts": "^2.16.5",
     "lowdb": "^7.0.1",
     "openpgp": "^5.11.1"
   },
