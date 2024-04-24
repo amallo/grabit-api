@@ -1,14 +1,14 @@
 import { expect } from "vitest"
 import { DropAnonymousTextMessageRequest, DropAnonymousTextMessageResponse, createDropAnonymousTextMessage } from "../drop-anonymous-message.usecase"
-import { FakeMessageRepository } from "../repositories/fake-message.repository"
-import { FakeReceiptRepository } from "../repositories/fake-receipt.repository"
+import { FakeMessageRepository } from "../gateways/fake-message.repository"
+import { FakeReceiptRepository } from "../gateways/fake-receipt.repository"
 import { Receipt } from "../models/receipt.model"
 import { AnonymousMessage } from "../models/message.model"
-import { FakeReceiptUrlGenerator } from "../repositories/fake-url.generator"
-import { FailureMessageRepository } from "../repositories/failure-message.repository"
+import { FakeReceiptUrlGenerator } from "../gateways/fake-url.generator"
+import { FailureMessageRepository } from "../gateways/failure-message.repository"
 import { isLeft, isRight } from "fp-ts/lib/Either"
 import { Result } from "../../common/fp/result"
-import { FailureReceiptRepository } from "../repositories/failure-receipt.repository"
+import { FailureReceiptRepository } from "../gateways/failure-receipt.repository"
 
 export const createMessageFixture = ()=>{
     const receiptRepository = new FakeReceiptRepository()

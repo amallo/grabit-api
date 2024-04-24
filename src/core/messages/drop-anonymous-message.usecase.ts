@@ -1,12 +1,11 @@
 
-import { Either, right, left } from "fp-ts/lib/Either";
+import { right, left } from "fp-ts/lib/Either";
 import { AnonymousMessage } from "./models/message.model";
-import { FakeReceiptUrlGenerator } from "./repositories/fake-url.generator";
-import { MessageRepository } from "./repositories/message.repository";
-import { ReceiptRepository } from "./repositories/receipt.repository";
+import { FakeReceiptUrlGenerator } from "./gateways/fake-url.generator";
+import { MessageRepository } from "./gateways/message.repository";
+import { ReceiptRepository } from "./gateways/receipt.repository";
 import { Err } from "../common/errors/err";
 import { Result } from "../common/fp/result";
-import { FakeDateProvider } from "../common/providers/fake-date.provider";
 
 export type DropAnonymousTextMessageResponse = {
     receipt: string
