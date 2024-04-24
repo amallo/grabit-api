@@ -1,14 +1,18 @@
 import { Receipt } from "../models/receipt.model";
-import {  ReceiptRepository } from "./receipt.repository";
+import {  DeliverOptions, ReceiptRepository } from "./receipt.repository";
 
-
+type ReceiptId = string
 export class FakeReceiptRepository implements ReceiptRepository{
-    private _deliveredReceipts: Record<string, Receipt> = {}
-    willDeliverReceipt(messageId: string, receipt: Receipt){
-        this._deliveredReceipts[messageId] = receipt
+    private _deliveredReceipts: Record<string, ReceiptId> = {}
+    
+    willDeliverReceipt(messageId: string, receiptId: string){
+        this._deliveredReceipts[messageId] = receiptId
     }
-    deliver(messageId: string): Promise<Receipt>{
+    deliver(messageId: string, options: DeliverOptions): Promise<Receipt>{
         if (!this._deliveredReceipts[messageId]) throw "cannot deliver message"
-        return Promise.resolve(this._deliveredReceipts[messageId])
+        return Promise.resolve({
+            id: this._deliveredReceipts[messageId],
+            validUntil: options.expiresAt
+        })
     }
 }

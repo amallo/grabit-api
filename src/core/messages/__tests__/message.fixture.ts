@@ -1,5 +1,5 @@
 import { expect } from "vitest"
-import { DropAnonymousTextMessageResponse, createDropAnonymousTextMessage } from "../drop-anonymous-message.usecase"
+import { DropAnonymousTextMessageRequest, DropAnonymousTextMessageResponse, createDropAnonymousTextMessage } from "../drop-anonymous-message.usecase"
 import { FakeMessageRepository } from "../repositories/fake-message.repository"
 import { FakeReceiptRepository } from "../repositories/fake-receipt.repository"
 import { Receipt } from "../models/receipt.model"
@@ -17,13 +17,13 @@ export const createMessageFixture = ()=>{
     let useCase = createDropAnonymousTextMessage({messageRepository, receiptRepository, receiptUrlGenerator: receiptLinkGenerator})
     let result: Result<DropAnonymousTextMessageResponse>
     return {
-        givenMessageDelivery(messageId: string, receipt: Receipt){
-            receiptRepository.willDeliverReceipt(messageId, receipt)
+        givenWillGenerateReceipt(receiptId: string, forMessageId: string){
+            receiptRepository.willDeliverReceipt(forMessageId, receiptId)
         },
         givenReceiptLinkPrefix(prefix: string){
             receiptLinkGenerator.willGenerateWithPrefix(prefix)
         },
-        async whenDroppingAnonymousMessage(params: {content: string, at: string, messageId: string}, errors: {dropFailure?: Error, receiptFailure?: Error} = {}){
+        async whenDroppingAnonymousMessage(params: DropAnonymousTextMessageRequest, errors: {dropFailure?: Error, receiptFailure?: Error} = {}){
             if (errors.dropFailure){
                 const failureMessageRepository = new FailureMessageRepository(errors.dropFailure)
                 useCase = createDropAnonymousTextMessage({messageRepository: failureMessageRepository, receiptRepository, receiptUrlGenerator: receiptLinkGenerator})
