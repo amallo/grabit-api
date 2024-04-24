@@ -4,7 +4,7 @@ import fastifyStatic from '@fastify/static'
 import { fileURLToPath } from 'url';
 
 
-const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
+const __filename = process.cwd(); // get the resolved path to the file
 const __dirname = path.dirname(__filename); // get the name of the directory
 const server = fastify({logger:true})
 

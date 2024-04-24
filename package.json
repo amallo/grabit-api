@@ -3,7 +3,7 @@
   "scripts": {
     "dev": "nodemon --watch src index.ts",
     "build": "tsc -p tsconfig.json",
-    "test": "vitest"
+    "test": "rm -rf ./build & vitest"
   },
   "dependencies": {
     "@fastify/static": "^7.0.3",

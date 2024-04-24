@@ -37,7 +37,7 @@ test('fails to drop an anonymous message', async () => {
                 hours: 1
             }
         },
-        new Error("drop failure")
+        {dropFailure: new Error("drop failure")}
     )
     fixture.thenDropMessageErrorShouldEqual(new Err("DROP_MESSAGE_ERROR", {cause: new Error("drop failure")}))
 })
@@ -53,8 +53,7 @@ test('fails to deliver receipt', async () => {
                 hours: 1
             }
         },
-        undefined,
-        new Error("receipt error")
+        {receiptFailure: new Error("receipt error")}
     )
     fixture.thenDropMessageErrorShouldEqual(new Err("DROP_MESSAGE_ERROR", {cause: new Error("receipt error")}))
 })
