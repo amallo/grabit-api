@@ -1,18 +1,17 @@
 import fastify from 'fastify'
 import path from 'node:path'
 import fastifyStatic from '@fastify/static'
-import { fileURLToPath } from 'url';
 
 
-const __filename = process.cwd(); // get the resolved path to the file
-const __dirname = path.dirname(__filename); // get the name of the directory
+const filename = process.cwd(); // get the resolved path to the file
+const dirname = path.dirname(filename); // get the name of the directory
 const server = fastify({logger:true})
 
-console.log("__dirname", __dirname)
+console.log("__dirname", dirname)
 
 
 server.register(fastifyStatic, {
-    root: path.join(__dirname, 'public/build'),
+    root: path.join(dirname, 'public/build'),
     prefix: '/', // optional: default '/'
     constraints: {} // optional: default {}
   })

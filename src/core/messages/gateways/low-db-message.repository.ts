@@ -4,7 +4,6 @@ import { MessageRepository } from "./message.repository";
 import { JSONFile } from 'lowdb/node'
 
 import * as openpgp from 'openpgp';
-import { stringToUint8Array, uint8ArrayToString } from "../../common/utils/strings/uint-array.utils";
 import { WebStream } from "openpgp";
 
 type AnonymousEncryptedMessage = Omit<AnonymousMessage, 'content'> & {content: WebStream<Uint8Array>}
