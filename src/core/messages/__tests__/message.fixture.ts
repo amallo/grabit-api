@@ -1,12 +1,14 @@
 import { expect } from "vitest"
-import { DropAnonymousTextMessageResponse, Result, createDropAnonymousTextMessage } from "../drop-anonymous-message.usecase"
+import { DropAnonymousTextMessageResponse, createDropAnonymousTextMessage } from "../drop-anonymous-message.usecase"
 import { FakeMessageRepository } from "../repositories/fake-message.repository"
 import { FakeReceiptRepository } from "../repositories/fake-receipt.repository"
 import { Receipt } from "../models/receipt.model"
 import { AnonymousMessage } from "../models/message.model"
 import { FakeReceiptUrlGenerator } from "../repositories/fake-url.generator"
 import { FailureMessageRepository } from "../repositories/failure-message.repository"
-import { isLeft, isRight, left, right } from "fp-ts/lib/Either"
+import { isLeft, isRight } from "fp-ts/lib/Either"
+import { Result } from "../../common/fp/result"
+import { FailureReceiptRepository } from "../repositories/failure-receipt.repository"
 
 export const createMessageFixture = ()=>{
     const receiptRepository = new FakeReceiptRepository()
@@ -21,10 +23,14 @@ export const createMessageFixture = ()=>{
         givenReceiptLinkPrefix(prefix: string){
             receiptLinkGenerator.willGenerateWithPrefix(prefix)
         },
-        async whenDroppingAnonymousMessage(params: {content: string, at: string, messageId: string}, withError?: Error){
-            if (withError){
-                const failureMessageRepository = new FailureMessageRepository(withError)
+        async whenDroppingAnonymousMessage(params: {content: string, at: string, messageId: string}, errors: {dropFailure?: Error, receiptFailure?: Error} = {}){
+            if (errors.dropFailure){
+                const failureMessageRepository = new FailureMessageRepository(errors.dropFailure)
                 useCase = createDropAnonymousTextMessage({messageRepository: failureMessageRepository, receiptRepository, receiptUrlGenerator: receiptLinkGenerator})
+            }
+            if (errors.receiptFailure){
+                const failureReceiptRepository = new FailureReceiptRepository(errors.receiptFailure)
+                useCase = createDropAnonymousTextMessage({messageRepository, receiptRepository: failureReceiptRepository, receiptUrlGenerator: receiptLinkGenerator})                
             }
             result = await useCase(params)
         },

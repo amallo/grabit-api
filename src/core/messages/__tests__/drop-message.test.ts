@@ -30,3 +30,13 @@ test('fails to drop an anonymous message', async () => {
     )
     fixture.thenDropMessageErrorShouldEqual(new Err("DROP_MESSAGE_ERROR", {cause: new Error("drop failure")}))
 })
+
+test('fails to deliver receipt', async () => {
+    const fixture = createMessageFixture()
+    await fixture.whenDroppingAnonymousMessage(
+        {content: "my pin code is 12345", at: "2024-01-04T10:52:19+02:00", messageId: "message0"},
+        undefined,
+        new Error("receipt error")
+    )
+    fixture.thenDropMessageErrorShouldEqual(new Err("DROP_MESSAGE_ERROR", {cause: new Error("receipt error")}))
+})
