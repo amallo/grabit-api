@@ -1,32 +1,20 @@
-import fastify from 'fastify'
-import path from 'node:path'
-import fastifyStatic from '@fastify/static'
+import restify from 'restify'
+import { dropAnonymousHandler } from './src/handlers/drop-anonynmous.handler';
+import { createCore } from './src/core/dependencies';
 
+const server = restify.createServer();
+server.use(restify.plugins.acceptParser(server.acceptable));
+server.use(restify.plugins.bodyParser());
+server.use(restify.plugins.queryParser());
+server.use(restify.plugins.fullResponse());
 
-const filename = process.cwd(); // get the resolved path to the file
-const dirname = path.dirname(filename); // get the name of the directory
-const server = fastify({logger:true})
+server.get("/public/*", restify.plugins.serveStatic({
+  directory: './public/build',
+}))
 
-console.log("__dirname", dirname)
+const core = createCore()
+server.post("/api/drop", dropAnonymousHandler(core))
 
-
-server.register(fastifyStatic, {
-    root: path.join(dirname, 'public/build'),
-    prefix: '/', // optional: default '/'
-    constraints: {} // optional: default {}
-  })
-
-// Declare a route  
-server.get('/', function (_request, reply) {  
-	reply.sendFile('index.html')
-})  
-  
-// Run the server!  
-server.listen({ port: 4000 }, function (err, address) {  
-	if (err) {  
-		server.log.error(err)  
-		process.exit(1)  
-	}
-	
-	console.log(`Server is now listening on ${address}`)  
-})
+server.listen(8080, function() {
+  console.info('%s listening at %s', server.name, server.url);
+});

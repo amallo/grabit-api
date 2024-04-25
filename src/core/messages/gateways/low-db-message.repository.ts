@@ -59,8 +59,8 @@ export class EncryptedLowDbMessageStorage implements Storage<AnonymousMessage>{
     async putItem(anonymous: AnonymousMessage): Promise<void> {
         const message = await openpgp.createMessage({ text: anonymous.content });
         const encrypted = await openpgp.encrypt({
-            message, // input as Message object
-            passwords: [this.password], // multiple passwords possible
+            message, 
+            passwords: [this.password], 
         });
         this.vaultStorage.putItem({
             id: anonymous.id,
