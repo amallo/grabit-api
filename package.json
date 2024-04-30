@@ -1,8 +1,10 @@
 {
   "scripts": {
     "dev": "nodemon --watch src index.ts",
-    "build": "tsc -p tsconfig.json",
-    "test": "rm -rf ./build & vitest"
+    "build:api": "rm -rf ./build & tsc -p tsconfig.json",
+    "deploy": "cp -R public build/",
+    "test": "rm -rf ./build & vitest",
+    "live": "npm run build & docker compose up --build"
   },
   "dependencies": {
     "@fastify/static": "^7.0.3",

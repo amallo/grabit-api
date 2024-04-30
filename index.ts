@@ -1,4 +1,4 @@
-require("fix-esm").register();
+process.env.NODE_ENV==='production' && require("fix-esm").register();
 
 import restify from 'restify'
 import { dropAnonymousHandler } from './src/handlers/drop-anonynmous.handler';
@@ -10,8 +10,9 @@ server.use(restify.plugins.bodyParser());
 server.use(restify.plugins.queryParser());
 server.use(restify.plugins.fullResponse());
 
-server.get("/public/*", restify.plugins.serveStatic({
+server.get("/*", restify.plugins.serveStatic({
   directory: './public',
+  default: 'index.html'
 }))
 
 const core = createCore()

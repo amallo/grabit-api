@@ -9,7 +9,6 @@ export const dropAnonymousHandler = (core: ApiCore)=>async (req: Request, res: R
         messageId: req.body.messageId,
         expiresIn: {hours: 1}
     })
-    console.groupEnd()
     if (isRight(result)){
         res.send(200, result.right)
         return;
