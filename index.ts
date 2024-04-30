@@ -1,3 +1,5 @@
+require("fix-esm").register();
+
 import restify from 'restify'
 import { dropAnonymousHandler } from './src/handlers/drop-anonynmous.handler';
 import { createCore } from './src/core/dependencies';

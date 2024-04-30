@@ -1,5 +1,4 @@
 {
-  "type": "module",
   "scripts": {
     "dev": "nodemon --watch src index.ts",
     "build": "tsc -p tsconfig.json",
@@ -7,6 +6,7 @@
   },
   "dependencies": {
     "@fastify/static": "^7.0.3",
+    "fix-esm": "^1.0.1",
     "fp-ts": "^2.16.5",
     "lowdb": "^7.0.1",
     "nanoid": "^5.0.7",
