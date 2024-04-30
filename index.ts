@@ -9,7 +9,7 @@ server.use(restify.plugins.queryParser());
 server.use(restify.plugins.fullResponse());
 
 server.get("/public/*", restify.plugins.serveStatic({
-  directory: './public/build',
+  directory: './public',
 }))
 
 const core = createCore()

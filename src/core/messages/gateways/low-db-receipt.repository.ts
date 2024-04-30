@@ -16,13 +16,17 @@ export class LowDbReceiptRepository implements ReceiptRepository{
     constructor(private idGenerator: IdGenerator){
         this.dbReceipts = new Low(new JSONFile("receipts.json"),  {receipts: {}})
     }
+    retrieve(receiptId: string): Promise<Receipt> {
+        throw new Error("Method not implemented.");
+    }
     async deliver(messageId: string, options: DeliverOptions): Promise<Receipt> {
         const receiptId = this.idGenerator.generate()
         this.dbReceipts.data.receipts[messageId] = receiptId
         await this.dbReceipts.write()
         return {
             id: receiptId,
-            validUntil: options.expiresAt
+            validUntil: options.expiresAt,
+            messageId
         }
     }
     
