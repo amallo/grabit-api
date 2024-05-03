@@ -1,5 +1,5 @@
-import { Receipt } from "../models/receipt.model";
-import {  DeliverOptions, ReceiptRepository } from "./receipt.repository";
+import { Receipt } from "../../../models/receipt.model";
+import {  DeliverOptions, ReceiptRepository } from "../../receipt.repository";
 
 type ReceiptId = string
 export class FakeReceiptRepository implements ReceiptRepository{

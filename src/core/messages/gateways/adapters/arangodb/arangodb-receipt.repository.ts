@@ -1,9 +1,9 @@
-import { AnonymousMessage } from "../models/message.model";
-import { MessageRepository } from "./message.repository";
+import { AnonymousMessage } from "../../../models/message.model";
+import { MessageRepository } from "../../message.repository";
 import {Database, aql} from 'arangojs'
-import { DeliverOptions, ReceiptRepository } from "./receipt.repository";
-import { Receipt } from "../models/receipt.model";
-import { IdGenerator } from "../../common/providers/id.generator";
+import { DeliverOptions, ReceiptRepository } from "../../receipt.repository";
+import { Receipt } from "../../../models/receipt.model";
+import { IdGenerator } from "../../../../common/providers/id.generator";
 
 
 

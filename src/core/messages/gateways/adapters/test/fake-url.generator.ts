@@ -1,4 +1,4 @@
-import { UrlGenerator } from "./url-generator"
+import { UrlGenerator } from "../../url-generator"
 
 import {URL} from 'node:url'
 

@@ -1,11 +1,10 @@
 import { afterAll, beforeAll, expect, it } from "vitest";
-import { ArangoDbMessageRepository } from "../arangodb-message.repository";
+import { ArangoDbMessageRepository } from "../adapters/arangodb/arangodb-message.repository";
 import { NanoIdGenerator } from "../../../common/providers/nanoid.generator";
-import { ArangoDbReceiptRepository } from "../arangodb-receipt.repository";
+import { ArangoDbReceiptRepository } from "../adapters/arangodb/arangodb-receipt.repository";
 import {Database} from 'arangojs'
 import { AnonymousMessage } from "../../models/message.model";
-import { EncryptMessageRepository } from "../encrypt-message.repository";
-import { afterEach, beforeEach } from "node:test";
+import { EncryptMessageRepository } from "../adapters/encrypt-message.repository";
 
 let db: Database
 beforeAll(()=>{

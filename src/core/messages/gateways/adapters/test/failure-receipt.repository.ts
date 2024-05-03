@@ -1,5 +1,5 @@
-import { Receipt } from "../models/receipt.model";
-import {  ReceiptRepository } from "./receipt.repository";
+import { Receipt } from "../../../models/receipt.model";
+import {  ReceiptRepository } from "../../receipt.repository";
 
 
 export class FailureReceiptRepository implements ReceiptRepository{

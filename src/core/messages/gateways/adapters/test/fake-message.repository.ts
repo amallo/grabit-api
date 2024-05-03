@@ -1,5 +1,5 @@
-import { AnonymousMessage } from "../models/message.model";
-import { MessageRepository } from "./message.repository";
+import { AnonymousMessage } from "../../../models/message.model";
+import { MessageRepository } from "../../message.repository";
 
 export class FakeMessageRepository implements MessageRepository{
     private _messages: Record<string, AnonymousMessage> = {}

@@ -1,5 +1,5 @@
-import { AnonymousMessage } from "../models/message.model";
-import { MessageRepository } from "./message.repository";
+import { AnonymousMessage } from "../../models/message.model";
+import { MessageRepository } from "../message.repository";
 import * as openpgp from 'openpgp';
 
 export class EncryptMessageRepository implements MessageRepository{

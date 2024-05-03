@@ -1,9 +1,9 @@
 import { NanoIdGenerator } from "./common/providers/nanoid.generator";
 import { createDropAnonymousTextMessage } from "./messages/drop-anonymous-message.usecase";
-import { EncryptMessageRepository } from "./messages/gateways/encrypt-message.repository";
-import { ArangoDbMessageRepository } from "./messages/gateways/arangodb-message.repository";
-import { ArangoDbReceiptRepository } from "./messages/gateways/arangodb-receipt.repository";
-import { FakeReceiptUrlGenerator } from "./messages/gateways/fake-url.generator";
+import { EncryptMessageRepository } from "./messages/gateways/adapters/encrypt-message.repository";
+import { ArangoDbMessageRepository } from "./messages/gateways/adapters/arangodb/arangodb-message.repository";
+import { ArangoDbReceiptRepository } from "./messages/gateways/adapters/arangodb/arangodb-receipt.repository";
+import { FakeReceiptUrlGenerator } from "./messages/gateways/adapters/test/fake-url.generator";
 import { MessageRepository } from "./messages/gateways/message.repository";
 import { ReceiptRepository } from "./messages/gateways/receipt.repository";
 import { UrlGenerator } from "./messages/gateways/url-generator";
