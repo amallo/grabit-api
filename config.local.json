@@ -1,0 +1,6 @@
+{
+  "DATABASE_NAME": "grabit",
+  "DATABASE_USER": "root",
+  "DATABASE_PASSWORD": "openSesame",
+  "DATABASE_ENCRYPTION_AT_REST": "toto" 
+}

@@ -25,7 +25,5 @@ yarn-error.log*
 # public
 /public
 
-# lowdb 
-messages.json
-receipts.json
-index.json
+# config
+config.json

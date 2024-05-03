@@ -10,6 +10,7 @@ export class EncryptMessageRepository implements MessageRepository{
             message: encryptedContent, 
             passwords: [this.password], 
         });
+        
         const encryptedMessage : AnonymousMessage = {
             at: message.at,
             content: JSON.stringify(encrypted),

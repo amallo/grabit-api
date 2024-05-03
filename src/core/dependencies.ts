@@ -8,6 +8,7 @@ import { MessageRepository } from "./messages/gateways/message.repository";
 import { ReceiptRepository } from "./messages/gateways/receipt.repository";
 import { UrlGenerator } from "./messages/gateways/url-generator";
 import {Database} from 'arangojs'
+import config from '../../config.json'
 
 export interface Dependencies {
     messageRepository: MessageRepository, 
@@ -16,11 +17,12 @@ export interface Dependencies {
 }
 
 export const createDependencies = (): Dependencies =>{
-    const db = new Database({ databaseName: 'grabit', auth: {
-        username: 'root', password: 'openSesame'
+    const db = new Database({ databaseName: config.DATABASE_NAME, auth: {
+        username: config.DATABASE_NAME, 
+        password: config.DATABASE_PASSWORD
     }});
     const clearMessageRepository = new ArangoDbMessageRepository(db)
-    const messageRepository = new EncryptMessageRepository(clearMessageRepository, "strong password la mif")
+    const messageRepository = new EncryptMessageRepository(clearMessageRepository, config.DATABASE_ENCRYPTION_AT_REST)
 
     const idGenerator = new NanoIdGenerator()
     const receiptRepository = new ArangoDbReceiptRepository(db, idGenerator)
