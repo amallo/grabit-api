@@ -1,6 +1,16 @@
 import {  Request, Response } from "restify";
 import { ApiCore } from "../core/dependencies";
-import { isRight, left, right } from "fp-ts/lib/Either";
+import { isRight } from "fp-ts/lib/Either";
+
+const schema: JSONSchemaType<MyData> = {
+    type: "object",
+    properties: {
+      foo: {type: "integer"},
+      bar: {type: "string", nullable: true}
+    },
+    required: ["foo"],
+    additionalProperties: false
+  }
 
 export const dropAnonymousHandler = (core: ApiCore)=>async (req: Request, res: Response) =>{
     const result = await core.dropAnonymous({
@@ -10,8 +20,8 @@ export const dropAnonymousHandler = (core: ApiCore)=>async (req: Request, res: R
         expiresIn: {hours: 1}
     })
     if (isRight(result)){
-        res.send(200, result.right)
+        res.json(200, result.right)
         return;
     }
-    res.send(500, result.left)
+    res.json(500, result.left)
 }

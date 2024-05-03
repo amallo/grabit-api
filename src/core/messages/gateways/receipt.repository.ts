@@ -5,5 +5,5 @@ export type DeliverOptions = {
 }
 export interface ReceiptRepository{
     deliver(messageId: string, options: DeliverOptions): Promise<Receipt>
-    retrieve(receiptId: string): Promise<Receipt>
+    retrieve(receiptId: string): Promise<Receipt | null>
 }

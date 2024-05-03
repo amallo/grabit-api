@@ -1,11 +1,13 @@
 import { NanoIdGenerator } from "./common/providers/nanoid.generator";
 import { createDropAnonymousTextMessage } from "./messages/drop-anonymous-message.usecase";
+import { EncryptMessageRepository } from "./messages/gateways/encrypt-message.repository";
+import { ArangoDbMessageRepository } from "./messages/gateways/arangodb-message.repository";
+import { ArangoDbReceiptRepository } from "./messages/gateways/arangodb-receipt.repository";
 import { FakeReceiptUrlGenerator } from "./messages/gateways/fake-url.generator";
-import { EncryptedLowDbMessageStorage, LowDbMessageRepository, LowDbMessageStorage } from "./messages/gateways/low-db-message.repository";
-import { LowDbReceiptRepository } from "./messages/gateways/low-db-receipt.repository";
 import { MessageRepository } from "./messages/gateways/message.repository";
 import { ReceiptRepository } from "./messages/gateways/receipt.repository";
 import { UrlGenerator } from "./messages/gateways/url-generator";
+import {Database} from 'arangojs'
 
 export interface Dependencies {
     messageRepository: MessageRepository, 
@@ -14,10 +16,14 @@ export interface Dependencies {
 }
 
 export const createDependencies = (): Dependencies =>{
-    const storage = new EncryptedLowDbMessageStorage("toto", new LowDbMessageStorage())
-    const messageRepository = new LowDbMessageRepository(storage)
+    const db = new Database({ databaseName: 'grabit', auth: {
+        username: 'root', password: 'openSesame'
+    }});
+    const clearMessageRepository = new ArangoDbMessageRepository(db)
+    const messageRepository = new EncryptMessageRepository(clearMessageRepository, "strong password la mif")
+
     const idGenerator = new NanoIdGenerator()
-    const receiptRepository = new LowDbReceiptRepository(idGenerator)
+    const receiptRepository = new ArangoDbReceiptRepository(db, idGenerator)
     const receiptUrlGenerator = new FakeReceiptUrlGenerator()
     receiptUrlGenerator.willGenerateWithPrefix("http://grabit.com")
     return {

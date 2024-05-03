@@ -8,9 +8,9 @@
   },
   "dependencies": {
     "@fastify/static": "^7.0.3",
+    "arangojs": "^8.8.1",
     "fix-esm": "^1.0.1",
     "fp-ts": "^2.16.5",
-    "lowdb": "^7.0.1",
     "nanoid": "^5.0.7",
     "openpgp": "^5.11.1",
     "restify": "^11.1.0"
