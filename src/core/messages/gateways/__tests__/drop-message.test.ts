@@ -18,8 +18,8 @@ afterAll(async ()=>{
 
 it('drops and read a message', async ()=>{
     const idGenerator = new NanoIdGenerator()
-    const messageRepository = new ArangoDbMessageRepository(db)
-    const encryptedMessageRepository = new EncryptMessageRepository(messageRepository, "toto")
+    const clearMessageRepository = new ArangoDbMessageRepository(db)
+    const messageRepository = new EncryptMessageRepository(clearMessageRepository, "toto")
 
     const messageId = idGenerator.generate()
     const expectedMessage : AnonymousMessage= {
@@ -27,7 +27,7 @@ it('drops and read a message', async ()=>{
         content: 'Salut',
         id: messageId
     }
-    await encryptedMessageRepository.dropAnonymous(expectedMessage)
+    await messageRepository.dropAnonymous(expectedMessage)
 
     const receiptRepository = new ArangoDbReceiptRepository(db, idGenerator)
     const expectedReceipt = await receiptRepository.deliver(messageId, {expiresAt: new Date().toISOString()})
@@ -35,7 +35,7 @@ it('drops and read a message', async ()=>{
     const receipt = await receiptRepository.retrieve(expectedReceipt.id)
     expect(receipt).toEqual(expectedReceipt)
 
-    const messsage = await encryptedMessageRepository.retrieve(messageId)
+    const messsage = await messageRepository.retrieve(messageId)
     expect(messsage).toEqual(expectedMessage)
     
 })
