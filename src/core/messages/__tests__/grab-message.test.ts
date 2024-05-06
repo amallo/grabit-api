@@ -11,8 +11,8 @@ test('grabs message', async () => {
         content: "my pin code is 12345",
         at: '2024-01-04T08:52:19.000Z'
     })
-    await fixture.whenGrabbingMessage("receipt0")
-    fixture.thenAnonymousMessageWasGrabbed({
+    const grabResult = await fixture.whenGrabbingMessage("receipt0")
+    fixture.thenResult(grabResult).shouldEqual({
         content: 'my pin code is 12345'
     })
 })
@@ -24,12 +24,12 @@ test('cannot grab nonexistent receipt', async () => {
         content: "my pin code is 12345",
         at: '2024-01-04T08:52:19.000Z'
     })
-    await fixture.whenGrabbingMessage("receipt0")
-    fixture.thenGrabMessageErrorShouldEqual(new Err("GRAB_MESSAGE_ERROR", {cause: new Error("receipt not found")}))
+    const result = await fixture.whenGrabbingMessage("receipt0")
+    fixture.thenResult(result).shouldFailWith(new Err("GRAB_MESSAGE_ERROR", {cause: new Error("receipt not found")}))
 })
 test('cannot grab nonexistent message', async () => {
     const fixture = createMessageFixture()
     fixture.givenDeliveredReceipt({id: "receipt0", messageId: "message0", validUntil: '2024-01-04T08:52:19.000Z'})
-    await fixture.whenGrabbingMessage("receipt0")
-    fixture.thenGrabMessageErrorShouldEqual(new Err("GRAB_MESSAGE_ERROR", {cause: new Error("message not found")}))
+    const result = await fixture.whenGrabbingMessage("receipt0")
+    fixture.thenResult(result).shouldFailWith(new Err("GRAB_MESSAGE_ERROR", {cause: new Error("message not found")}))
 })

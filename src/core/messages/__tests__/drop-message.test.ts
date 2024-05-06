@@ -6,8 +6,9 @@ import { Err } from '../../common/errors/err'
 test('drops an anonymous message', async () => {
     const fixture = createMessageFixture()
     fixture.givenWillDeliverReceipt("receipt0", "message0")
-    fixture.givenReceiptLinkPrefix("http://grabit.com/files")
-    await fixture.whenDroppingAnonymousMessage({
+    
+    fixture.givenWillGenerateReceiptLinkPrefix("http://grabit.com/files")
+    const dropResult = await fixture.whenDroppingAnonymousMessage({
         content: "my pin code is 12345", 
         at: "2024-01-04T08:52:19.000Z", 
         messageId: "message0",
@@ -15,7 +16,7 @@ test('drops an anonymous message', async () => {
             hours: 1
         }
     })
-    fixture.thenDroppedMessageShouldDeliveredWith({
+    fixture.thenResult(dropResult).shouldEqual({
         receipt: "http://grabit.com/files/receipt0",
         validUntil: "2024-01-04T09:52:19.000Z"
     })
@@ -28,7 +29,7 @@ test('drops an anonymous message', async () => {
 
 test('fails to drop an anonymous message', async () => {
     const fixture = createMessageFixture()
-    await fixture.whenDroppingAnonymousMessage(
+    const dropResult = await fixture.whenDroppingAnonymousMessage(
         {
             content: "my pin code is 12345", 
             at: "2024-01-04T10:52:19+02:00", 
@@ -39,12 +40,12 @@ test('fails to drop an anonymous message', async () => {
         },
         {dropFailure: new Error("drop failure")}
     )
-    fixture.thenDropMessageErrorShouldEqual(new Err("DROP_MESSAGE_ERROR", {cause: new Error("drop failure")}))
+    fixture.thenResult(dropResult).shouldFailWith(new Err("DROP_MESSAGE_ERROR", {cause: new Error("drop failure")}))
 })
 
 test('fails to deliver receipt', async () => {
     const fixture = createMessageFixture()
-    await fixture.whenDroppingAnonymousMessage(
+    const dropResult = await fixture.whenDroppingAnonymousMessage(
         {
             content: "my pin code is 12345", 
             at: "2024-01-04T10:52:19+02:00", 
@@ -55,5 +56,5 @@ test('fails to deliver receipt', async () => {
         },
         {receiptFailure: new Error("receipt error")}
     )
-    fixture.thenDropMessageErrorShouldEqual(new Err("DROP_MESSAGE_ERROR", {cause: new Error("receipt error")}))
+    fixture.thenResult(dropResult).shouldFailWith(new Err("DROP_MESSAGE_ERROR", {cause: new Error("receipt error")}))
 })

@@ -1,5 +1,5 @@
 import { expect } from "vitest"
-import { DropAnonymousTextMessageRequest, DropAnonymousTextMessageResponse, createDropAnonymousTextMessage } from "../drop-anonymous-message.usecase"
+import { DropAnonymousTextMessageRequest, createDropAnonymousTextMessage } from "../drop-anonymous-message.usecase"
 import { FakeMessageRepository } from "../gateways/adapters/test/fake-message.repository"
 import { FakeReceiptRepository } from "../gateways/adapters/test/fake-receipt.repository"
 import { Receipt } from "../models/receipt.model"
@@ -9,7 +9,7 @@ import { FailureMessageRepository } from "../gateways/adapters/test/failure-mess
 import { isLeft, isRight } from "fp-ts/lib/Either"
 import { Result } from "../../common/fp/result"
 import { FailureReceiptRepository } from "../gateways/adapters/test/failure-receipt.repository"
-import { GrabMessageResponse, createGrabMessage } from "../grab-message.usecase"
+import { createGrabMessage } from "../grab-message.usecase"
 import { Err } from "../../common/errors/err"
 
 export const createMessageFixture = ()=>{
@@ -17,10 +17,7 @@ export const createMessageFixture = ()=>{
     const messageRepository = new FakeMessageRepository()
     const receiptLinkGenerator = new FakeReceiptUrlGenerator()
     let dropUseCase = createDropAnonymousTextMessage({messageRepository, receiptRepository, receiptUrlGenerator: receiptLinkGenerator})
-    let dropResult: Result<DropAnonymousTextMessageResponse>
-
     let grabUseCase = createGrabMessage({messageRepository, receiptRepository, receiptUrlGenerator: receiptLinkGenerator})
-    let grabResult : Result<GrabMessageResponse>
     return {
         givenWillDeliverReceipt(receiptId: string, forMessageId: string){
             receiptRepository.willDeliverReceipt(forMessageId, receiptId)
@@ -28,13 +25,13 @@ export const createMessageFixture = ()=>{
         givenDeliveredReceipt(receipt: Receipt){
             receiptRepository.wasDeliveredReceipt(receipt)
         },
-        givenReceiptLinkPrefix(prefix: string){
+        givenWillGenerateReceiptLinkPrefix(prefix: string){
             receiptLinkGenerator.willGenerateWithPrefix(prefix)
         },
         givenDroppedMessage(message: AnonymousMessage){
             messageRepository.withMessage(message)
         },
-        async whenDroppingAnonymousMessage(params: DropAnonymousTextMessageRequest, errors: {dropFailure?: Error, receiptFailure?: Error} = {}){
+        whenDroppingAnonymousMessage(params: DropAnonymousTextMessageRequest, errors: {dropFailure?: Error, receiptFailure?: Error} = {}){
             if (errors.dropFailure){
                 const failureMessageRepository = new FailureMessageRepository(errors.dropFailure)
                 dropUseCase = createDropAnonymousTextMessage({messageRepository: failureMessageRepository, receiptRepository, receiptUrlGenerator: receiptLinkGenerator})
@@ -43,43 +40,28 @@ export const createMessageFixture = ()=>{
                 const failureReceiptRepository = new FailureReceiptRepository(errors.receiptFailure)
                 dropUseCase = createDropAnonymousTextMessage({messageRepository, receiptRepository: failureReceiptRepository, receiptUrlGenerator: receiptLinkGenerator})                
             }
-            dropResult = await dropUseCase(params)
+            return dropUseCase(params)
         },
         async whenGrabbingMessage(receipt: string){
-            grabResult = await grabUseCase(receipt)
+            return grabUseCase(receipt)
         },
-        async whenGrabbingMessageWithMissingReceipt(receipt: string, error: Error){
-            const failureReceiptRepository = new FailureReceiptRepository(error)
-            grabUseCase = createGrabMessage({messageRepository, receiptRepository: failureReceiptRepository, receiptUrlGenerator: receiptLinkGenerator})
-            grabResult = await grabUseCase(receipt)
-        },
-        async whenGrabbingMessageWithMissingMessage(receipt: string, error: Error){
-            const failureMessageRepository = new FailureMessageRepository(error)
-            grabUseCase = createGrabMessage({messageRepository: failureMessageRepository, receiptRepository, receiptUrlGenerator: receiptLinkGenerator})
-            grabResult = await grabUseCase(receipt)
-        },
-        thenDroppedMessageShouldDeliveredWith(expected: DropAnonymousTextMessageResponse ){
-            expect(isRight(dropResult))
-            if (isRight(dropResult))
-                expect(dropResult.right).toEqual(expected)
+        thenResult<T>(result: Result<T>){
+            return {
+                shouldEqual(expected: T){
+                    expect(isRight(result))
+                    if (isRight(result))
+                        expect(result.right).toEqual(expected)
+                },
+                shouldFailWith(err: Err){
+                    expect(isLeft(result))
+                    if (isLeft(result))
+                        expect(result.left).toEqual(err)
+                }
+            }
         },
         thenAnonymousMessageWasDroppedWithParams(message: AnonymousMessage){
             expect(messageRepository.wasAnonymouslyDroppedWith()).toEqual(message)
         },
-        thenDropMessageErrorShouldEqual(error: Error){
-            expect(isLeft(dropResult))
-            if (isLeft(dropResult))
-                expect(dropResult.left).toEqual(error)
-        },
-        thenGrabMessageErrorShouldEqual(error: Err){
-            expect(isLeft(grabResult))
-            if (isLeft(grabResult))
-                expect(grabResult.left).toEqual(error)
-        },
-        thenAnonymousMessageWasGrabbed(expected: {content: string}){
-            expect(isRight(grabResult))
-            if (isRight(grabResult))
-                expect(grabResult.right).toEqual(expected)
-        },
+        
     }
 }
