@@ -16,15 +16,18 @@ export const createGrabMessage = (
                 if (!receipt){
                     throw Err.NotFound("receipt not found")
                 }
+                console.info('found receipt id', receiptId)
                 const message = await messageRepository.retrieve(receipt.messageId)
                 if (!message){
                     throw Err.NotFound("message not found")
                 }
+                console.info('found message', receiptId)
                 return Promise.resolve(right({
-                    content: message?.content as string
+                    content: message.content
                 }))
             }
             catch(e){
+                console.error(e)
                 const err = new Err("GRAB_MESSAGE_ERROR", {cause: e})
                 return left(err)
             }

@@ -3,12 +3,12 @@ import { createDropAnonymousTextMessage } from "./messages/drop-anonymous-messag
 import { EncryptMessageRepository } from "./messages/gateways/adapters/encrypt-message.repository";
 import { ArangoDbMessageRepository } from "./messages/gateways/adapters/arangodb/arangodb-message.repository";
 import { ArangoDbReceiptRepository } from "./messages/gateways/adapters/arangodb/arangodb-receipt.repository";
-import { FakeReceiptUrlGenerator } from "./messages/gateways/adapters/test/fake-url.generator";
 import { MessageRepository } from "./messages/gateways/message.repository";
 import { ReceiptRepository } from "./messages/gateways/receipt.repository";
 import { UrlGenerator } from "./messages/gateways/url-generator";
 import {Database} from 'arangojs'
 import config from '../../config.json'
+import { HostnameReceiptUrlGenerator } from "./messages/gateways/adapters/test/hostname-url.generator";
 
 export interface Dependencies {
     messageRepository: MessageRepository, 
@@ -18,7 +18,7 @@ export interface Dependencies {
 
 export const createDependencies = (): Dependencies =>{
     const db = new Database({ databaseName: config.DATABASE_NAME, auth: {
-        username: config.DATABASE_NAME, 
+        username: config.DATABASE_USER, 
         password: config.DATABASE_PASSWORD
     }});
     const clearMessageRepository = new ArangoDbMessageRepository(db)
@@ -26,8 +26,7 @@ export const createDependencies = (): Dependencies =>{
 
     const idGenerator = new NanoIdGenerator()
     const receiptRepository = new ArangoDbReceiptRepository(db, idGenerator)
-    const receiptUrlGenerator = new FakeReceiptUrlGenerator()
-    receiptUrlGenerator.willGenerateWithPrefix("http://grabit.com")
+    const receiptUrlGenerator = new HostnameReceiptUrlGenerator("http://grabit.com")
     return {
         messageRepository,
         receiptRepository,

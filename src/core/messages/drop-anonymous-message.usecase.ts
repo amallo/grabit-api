@@ -30,6 +30,7 @@ export const createDropAnonymousTextMessage = (
             }
             try{
                 await messageRepository.dropAnonymous(message)
+
                 const atDate = new Date(at)
                 atDate.setHours(atDate.getHours() + expiresIn.hours)
                 const expiresAt = atDate.toISOString()
@@ -41,6 +42,7 @@ export const createDropAnonymousTextMessage = (
                 })
             }
             catch(e){
+                console.error(e)
                 const err = new Err("DROP_MESSAGE_ERROR", {cause: e as Err})
                 return left(err)
             }
