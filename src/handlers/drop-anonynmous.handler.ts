@@ -12,7 +12,7 @@ const schema: JSONSchemaType<MyData> = {
     additionalProperties: false
   }
 
-export const dropAnonymousHandler = (core: ApiCore)=>async (req: Request, res: Response) =>{
+export const createDropAnonymousHandler = (core: ApiCore)=>async (req: Request, res: Response) =>{
     const result = await core.dropAnonymous({
         content: req.body.content,
         at: req.body.at,

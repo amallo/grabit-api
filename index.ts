@@ -1,7 +1,7 @@
 process.env.NODE_ENV==='production' && require("fix-esm").register();
 
 import restify from 'restify'
-import { dropAnonymousHandler } from './src/handlers/drop-anonynmous.handler';
+import { createDropAnonymousHandler } from './src/handlers/drop-anonynmous.handler';
 import { createCore } from './src/core/dependencies';
 
 const server = restify.createServer();
@@ -16,7 +16,7 @@ server.get("/*", restify.plugins.serveStatic({
 }))
 
 const core = createCore()
-server.post("/api/drop", dropAnonymousHandler(core))
+server.post("/api/drop", createDropAnonymousHandler(core))
 
 server.listen(8080, function() {
   console.info('%s listening at %s', server.name, server.url);
