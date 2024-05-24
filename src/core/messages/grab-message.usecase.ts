@@ -21,7 +21,7 @@ export const createGrabMessage = (
                 if (!message){
                     throw Err.NotFound("message not found")
                 }
-                console.info('found message', receiptId)
+                console.info('found message', message.id)
                 return Promise.resolve(right({
                     content: message.content
                 }))

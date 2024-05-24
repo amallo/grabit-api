@@ -1,16 +1,18 @@
-import {  Request, Response } from "restify";
+import {  Next, Request, Response } from "restify";
 import { ApiCore } from "../core/dependencies";
 import { isRight } from "fp-ts/lib/Either";
+import Joi from 'joi'
+import { createValidator } from "./validator.middleware";
 
-const schema: JSONSchemaType<MyData> = {
-    type: "object",
-    properties: {
-      foo: {type: "integer"},
-      bar: {type: "string", nullable: true}
-    },
-    required: ["foo"],
-    additionalProperties: false
-  }
+const schema = Joi.object({
+    content: Joi.string()
+      .alphanum()
+      .min(1)
+      .required(),
+    at: Joi.date().iso().required(),
+    messageId: Joi.string().min(10).required()  
+})
+export const DropAnonymousValidator = createValidator(schema)
 
 export const createDropAnonymousHandler = (core: ApiCore)=>async (req: Request, res: Response) =>{
     const result = await core.dropAnonymous({

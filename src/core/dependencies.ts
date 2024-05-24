@@ -9,6 +9,7 @@ import { UrlGenerator } from "./messages/gateways/url-generator";
 import {Database} from 'arangojs'
 import config from '../../config.json'
 import { HostnameReceiptUrlGenerator } from "./messages/gateways/adapters/test/hostname-url.generator";
+import { createGrabMessage } from "./messages/grab-message.usecase";
 
 export interface Dependencies {
     messageRepository: MessageRepository, 
@@ -36,7 +37,8 @@ export const createDependencies = (): Dependencies =>{
 
 export const createCore = (dependencies: Dependencies = createDependencies())=>{
     return {
-        dropAnonymous: createDropAnonymousTextMessage(dependencies)
+        dropAnonymous: createDropAnonymousTextMessage(dependencies),
+        grab: createGrabMessage(dependencies)
     }
 }
 
