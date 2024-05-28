@@ -1,24 +1,25 @@
-import { AnonymousMessage } from "../../models/message.model";
+import { Message } from "../../models/message.model";
 import { MessageRepository } from "../message.repository";
 import * as openpgp from 'openpgp';
 
 export class EncryptMessageRepository implements MessageRepository{
     constructor(private messageRepository: MessageRepository, private password: string){}
-    async dropAnonymous(message: AnonymousMessage): Promise<void> {
+    async drop(message: Message): Promise<void> {
         const encryptedContent = await openpgp.createMessage({ text: message.content });
         const encrypted = await openpgp.encrypt({
             message: encryptedContent, 
             passwords: [this.password],  
         }) as string; 
         
-        const encryptedMessage : AnonymousMessage = {
+        const encryptedMessage : Message = {
             at: message.at,
             content: encrypted,
-            id: message.id
+            id: message.id,
+            type: message.type
         }
-        return this.messageRepository.dropAnonymous(encryptedMessage)
+        return this.messageRepository.drop(encryptedMessage)
     }
-    async retrieve(messageId: string): Promise<AnonymousMessage | null> {
+    async retrieve(messageId: string): Promise<Message | null> {
         const withEncryptedContentMessage = await  this.messageRepository.retrieve(messageId)
         if (!withEncryptedContentMessage) return null
         const encryptedContent = await openpgp.readMessage({
@@ -33,7 +34,8 @@ export class EncryptMessageRepository implements MessageRepository{
         return {
             at: withEncryptedContentMessage.at,
             id: withEncryptedContentMessage.id,
-            content: decrypted.toString()
+            content: decrypted.toString(),
+            type: withEncryptedContentMessage.type
         }
        
     }

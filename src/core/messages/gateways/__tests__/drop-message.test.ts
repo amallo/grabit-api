@@ -3,7 +3,7 @@ import { ArangoDbMessageRepository } from "../adapters/arangodb/arangodb-message
 import { NanoIdGenerator } from "../../../common/providers/nanoid.generator";
 import { ArangoDbReceiptRepository } from "../adapters/arangodb/arangodb-receipt.repository";
 import {Database} from 'arangojs'
-import { AnonymousMessage } from "../../models/message.model";
+import { Message } from "../../models/message.model";
 import { EncryptMessageRepository } from "../adapters/encrypt-message.repository";
 
 let db: Database
@@ -22,12 +22,13 @@ it('drops and read a message', async ()=>{
     const messageRepository = new EncryptMessageRepository(clearMessageRepository, "toto")
 
     const messageId = idGenerator.generate()
-    const expectedMessage : AnonymousMessage= {
+    const expectedMessage : Message= {
         at: new Date().toISOString(),
         content: 'Salut',
-        id: messageId
+        id: messageId,
+        type: 'text'
     }
-    await messageRepository.dropAnonymous(expectedMessage)
+    await messageRepository.drop(expectedMessage)
 
     const receiptRepository = new ArangoDbReceiptRepository(db, idGenerator)
     const expectedReceipt = await receiptRepository.deliver(messageId, {expiresAt: new Date().toISOString()})

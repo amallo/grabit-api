@@ -9,11 +9,13 @@ test('grabs message', async () => {
     fixture.givenDroppedMessage({
         id: "message0",
         content: "my pin code is 12345",
-        at: '2024-01-04T08:52:19.000Z'
+        at: '2024-01-04T08:52:19.000Z',
+        type: 'text'
     })
     const grabResult = await fixture.whenGrabbingMessage("receipt0")
     fixture.thenResult(grabResult).shouldEqual({
-        content: 'my pin code is 12345'
+        content: 'my pin code is 12345',
+        type: "text"
     })
 })
 
@@ -22,7 +24,8 @@ test('cannot grab nonexistent receipt', async () => {
     fixture.givenDroppedMessage({
         id: "message0",
         content: "my pin code is 12345",
-        at: '2024-01-04T08:52:19.000Z'
+        at: '2024-01-04T08:52:19.000Z',
+        type: 'text'
     })
     const result = await fixture.whenGrabbingMessage("receipt0")
     fixture.thenResult(result).shouldFailWith(new Err("GRAB_MESSAGE_ERROR", {cause: new Error("receipt not found")}))

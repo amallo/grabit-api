@@ -1,20 +1,20 @@
-import { AnonymousMessage } from "../../../models/message.model";
+import { Message } from "../../../models/message.model";
 import { MessageRepository } from "../../message.repository";
 
 export class FakeMessageRepository implements MessageRepository{
-    private _messages: Record<string, AnonymousMessage> = {}
-    retrieve(messageId: string): Promise<AnonymousMessage | null> {
+    private _messages: Record<string, Message> = {}
+    retrieve(messageId: string): Promise<Message | null> {
         return Promise.resolve(this._messages[messageId])
     }
-    private _anonymouslyDroppedWith!: AnonymousMessage
-    dropAnonymous(message: AnonymousMessage): Promise<void>{
+    private _anonymouslyDroppedWith!: Message
+    drop(message: Message): Promise<void>{
         this._anonymouslyDroppedWith = message
         return Promise.resolve()
     }
     wasAnonymouslyDroppedWith(){
         return this._anonymouslyDroppedWith
     }
-    withMessage(message: AnonymousMessage){
+    withMessage(message: Message){
         this._messages[message.id] = message
     }
 }

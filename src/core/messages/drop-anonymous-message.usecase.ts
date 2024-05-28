@@ -1,6 +1,6 @@
 
 import { right, left } from "fp-ts/lib/Either";
-import { AnonymousMessage } from "./models/message.model";
+import { Message } from "./models/message.model";
 import { Err } from "../common/errors/err";
 import { Result } from "../common/fp/result";
 import { Dependencies } from "../dependencies";
@@ -23,13 +23,14 @@ export type DropAnonymousTextMessageRequest = {
 export const createDropAnonymousTextMessage = (
     {messageRepository, receiptRepository, receiptUrlGenerator}: Dependencies)=>
         async ({content, at, messageId, expiresIn}: DropAnonymousTextMessageRequest): Promise<Result<DropAnonymousTextMessageResponse>>=>{
-            const message : AnonymousMessage = {
+            const message : Message = {
                 at,
                 content,
-                id: messageId
+                id: messageId,
+                type: 'text'
             }
             try{
-                await messageRepository.dropAnonymous(message)
+                await messageRepository.drop(message)
 
                 const atDate = new Date(at)
                 atDate.setHours(atDate.getHours() + expiresIn.hours)
@@ -38,7 +39,7 @@ export const createDropAnonymousTextMessage = (
                 const receiptUrl = receiptUrlGenerator.generate(receipt.id).toString()
                 return right({
                     receipt: receiptUrl,
-                    validUntil: receipt.validUntil
+                    validUntil: receipt.validUntil,
                 })
             }
             catch(e){

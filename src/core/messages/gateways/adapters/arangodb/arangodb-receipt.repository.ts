@@ -1,4 +1,4 @@
-import { AnonymousMessage } from "../../../models/message.model";
+import { Message } from "../../../models/message.model";
 import { MessageRepository } from "../../message.repository";
 import {Database, aql} from 'arangojs'
 import { DeliverOptions, ReceiptRepository } from "../../receipt.repository";

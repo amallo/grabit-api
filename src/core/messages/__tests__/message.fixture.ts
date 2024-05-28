@@ -3,7 +3,7 @@ import { DropAnonymousTextMessageRequest, createDropAnonymousTextMessage } from 
 import { FakeMessageRepository } from "../gateways/adapters/test/fake-message.repository"
 import { FakeReceiptRepository } from "../gateways/adapters/test/fake-receipt.repository"
 import { Receipt } from "../models/receipt.model"
-import { AnonymousMessage } from "../models/message.model"
+import { Message } from "../models/message.model"
 import { FakeReceiptUrlGenerator } from "../gateways/adapters/test/fake-url.generator"
 import { FailureMessageRepository } from "../gateways/adapters/test/failure-message.repository"
 import { isLeft, isRight } from "fp-ts/lib/Either"
@@ -28,7 +28,7 @@ export const createMessageFixture = ()=>{
         givenWillGenerateReceiptLinkPrefix(prefix: string){
             receiptLinkGenerator.willGenerateWithPrefix(prefix)
         },
-        givenDroppedMessage(message: AnonymousMessage){
+        givenDroppedMessage(message: Message){
             messageRepository.withMessage(message)
         },
         whenDroppingAnonymousMessage(params: DropAnonymousTextMessageRequest, errors: {dropFailure?: Error, receiptFailure?: Error} = {}){
@@ -59,7 +59,7 @@ export const createMessageFixture = ()=>{
                 }
             }
         },
-        thenAnonymousMessageWasDroppedWithParams(message: AnonymousMessage){
+        thenAnonymousMessageWasDroppedWithParams(message: Message){
             expect(messageRepository.wasAnonymouslyDroppedWith()).toEqual(message)
         },
         

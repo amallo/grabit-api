@@ -23,7 +23,8 @@ test('drops an anonymous message', async () => {
     fixture.thenAnonymousMessageWasDroppedWithParams({
         content: "my pin code is 12345",
         at: "2024-01-04T08:52:19.000Z",
-        id: "message0"
+        id: "message0",
+        type: 'text'
     })
 })
 

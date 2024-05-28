@@ -5,7 +5,8 @@ import { Result } from "../common/fp/result";
 import { Dependencies } from "../dependencies";
 
 export type GrabMessageResponse = {
-    content: string
+    content: string,
+    type: string
 }
 
 export const createGrabMessage = (
@@ -23,7 +24,8 @@ export const createGrabMessage = (
                 }
                 console.info('found message', message.id)
                 return Promise.resolve(right({
-                    content: message.content
+                    content: message.content,
+                    type: message.type
                 }))
             }
             catch(e){
