@@ -1,9 +1,9 @@
 
 import { right, left } from "fp-ts/lib/Either";
-import { Message } from "./models/message.model";
-import { Err } from "../common/errors/err";
-import { Result } from "../common/fp/result";
-import { Dependencies } from "../dependencies";
+import { Message } from "../models/message.model";
+import { Err } from "../../common/errors/err";
+import { Result } from "../../common/fp/result";
+import { Dependencies } from "../../dependencies";
 
 export type DropAnonymousTextMessageResponse = {
     receipt: string
@@ -12,7 +12,7 @@ export type DropAnonymousTextMessageResponse = {
 type MessageHoursExpiration = {
     hours: number
 }
-type MessageExpiration = MessageHoursExpiration
+export type MessageExpiration = MessageHoursExpiration
 export type DropAnonymousTextMessageRequest = {
     content: string, 
     at: string, 
@@ -43,8 +43,9 @@ export const createDropAnonymousTextMessage = (
                 })
             }
             catch(e){
-                console.error(e)
                 const err = new Err("DROP_MESSAGE_ERROR", {cause: e as Err})
                 return left(err)
             }
 }
+
+export type DropMessage = ReturnType<typeof createDropAnonymousTextMessage>
