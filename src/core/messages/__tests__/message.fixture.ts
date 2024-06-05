@@ -1,15 +1,15 @@
-import { expect } from "vitest"
-import { DropAnonymousTextMessageRequest, createDropAnonymousTextMessage } from "../drop-anonymous-message.usecase"
+
+import { DropAnonymousTextMessageRequest, createDropAnonymousTextMessage } from "../usecases/drop-anonymous-message.usecase"
 import { FakeMessageRepository } from "../gateways/adapters/test/fake-message.repository"
 import { FakeReceiptRepository } from "../gateways/adapters/test/fake-receipt.repository"
 import { Receipt } from "../models/receipt.model"
 import { Message } from "../models/message.model"
 import { FakeReceiptUrlGenerator } from "../gateways/adapters/test/fake-url.generator"
 import { FailureMessageRepository } from "../gateways/adapters/test/failure-message.repository"
-import { isLeft, isRight } from "fp-ts/lib/Either"
+import { isLeft, isRight } from "fp-ts/Either"
 import { Result } from "../../common/fp/result"
 import { FailureReceiptRepository } from "../gateways/adapters/test/failure-receipt.repository"
-import { createGrabMessage } from "../grab-message.usecase"
+import { createGrabMessage } from "../usecases/grab-message.usecase"
 import { Err } from "../../common/errors/err"
 
 export const createMessageFixture = ()=>{

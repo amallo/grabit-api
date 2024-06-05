@@ -1,8 +1,8 @@
 
 import { right, left } from "fp-ts/lib/Either";
-import { Err } from "../common/errors/err";
-import { Result } from "../common/fp/result";
-import { Dependencies } from "../dependencies";
+import { Err } from "../../common/errors/err";
+import { Result } from "../../common/fp/result";
+import { Dependencies } from "../../dependencies";
 
 export type GrabMessageResponse = {
     content: string,
