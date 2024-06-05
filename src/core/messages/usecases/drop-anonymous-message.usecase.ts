@@ -6,7 +6,7 @@ import { Result } from "../../common/fp/result";
 import { Dependencies } from "../../dependencies";
 
 export type DropAnonymousTextMessageResponse = {
-    receipt: string
+    id: string
     validUntil: string
 }
 type MessageHoursExpiration = {
@@ -38,7 +38,7 @@ export const createDropAnonymousTextMessage = (
                 const receipt = await receiptRepository.deliver(message.id, {expiresAt})
                 const receiptUrl = receiptUrlGenerator.generate(receipt.id).toString()
                 return right({
-                    receipt: receiptUrl,
+                    id: receiptUrl,
                     validUntil: receipt.validUntil,
                 })
             }

@@ -17,7 +17,7 @@ test('drops an anonymous message', async () => {
         }
     })
     fixture.thenResult(dropResult).shouldEqual({
-        receipt: "http://grabit.com/files/receipt0",
+        id: "http://grabit.com/files/receipt0",
         validUntil: "2024-01-04T09:52:19.000Z"
     })
     fixture.thenAnonymousMessageWasDroppedWithParams({

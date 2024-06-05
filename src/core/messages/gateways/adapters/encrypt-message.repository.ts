@@ -19,8 +19,8 @@ export class EncryptMessageRepository implements MessageRepository{
         }
         return this.messageRepository.drop(encryptedMessage)
     }
-    async retrieve(messageId: string): Promise<Message | null> {
-        const withEncryptedContentMessage = await  this.messageRepository.retrieve(messageId)
+    async grab(messageId: string): Promise<Message | null> {
+        const withEncryptedContentMessage = await  this.messageRepository.grab(messageId)
         if (!withEncryptedContentMessage) return null
         const encryptedContent = await openpgp.readMessage({
             armoredMessage: withEncryptedContentMessage.content

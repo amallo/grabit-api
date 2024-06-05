@@ -23,5 +23,21 @@ export class ArangoDbMessageRepository implements MessageRepository{
         }
         return null
     }
+    async delete(messageId: string): Promise<Message | null> {
+        const message = await this.retrieve(messageId)
+        if (!message) return null
+        const Messages = this.db.collection("messages");
+        await this.db.query(aql`
+            FOR message IN ${Messages}
+                FILTER message.id == ${messageId}
+                REMOVE message IN ${Messages}
+        `);
+    }
+    async grab(messageId: string): Promise<Message | null> {
+        const message = await this.retrieve(messageId)
+        if (!message) return null
+        await this.delete(messageId)
+        return message
+    }
     
 }

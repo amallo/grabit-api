@@ -18,7 +18,7 @@ export const createGrabMessage = (
                     throw Err.NotFound("receipt not found")
                 }
                 console.info('found receipt id', receiptId)
-                const message = await messageRepository.retrieve(receipt.messageId)
+                const message = await messageRepository.grab(receipt.messageId)
                 if (!message){
                     throw Err.NotFound("message not found")
                 }
@@ -34,3 +34,4 @@ export const createGrabMessage = (
                 return left(err)
             }
         }
+export type GrabMessage = ReturnType<typeof createGrabMessage>

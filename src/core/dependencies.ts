@@ -27,7 +27,7 @@ export const createDependencies = (config: AppConfig): Dependencies =>{
 
     const idGenerator = new NanoIdGenerator()
     const receiptRepository = new ArangoDbReceiptRepository(db, idGenerator)
-    const receiptUrlGenerator = new HostnameReceiptUrlGenerator("http://grabit.com")
+    const receiptUrlGenerator = new HostnameReceiptUrlGenerator(config.HOST_NAME)
     return {
         messageRepository,
         receiptRepository,

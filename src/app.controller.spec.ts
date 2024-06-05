@@ -5,6 +5,7 @@ import { FakeMessageRepository } from './core/messages/gateways/adapters/test/fa
 import { FakeReceiptRepository } from './core/messages/gateways/adapters/test/fake-receipt.repository';
 import { FakeReceiptUrlGenerator } from './core/messages/gateways/adapters/test/fake-url.generator';
 import { createDropAnonymousTextMessage } from './core/messages/usecases/drop-anonymous-message.usecase';
+import { createGrabMessage } from './core/messages/usecases/grab-message.usecase';
 
 describe('AppController', () => {
   let appController: AppController;
@@ -22,6 +23,13 @@ describe('AppController', () => {
           provide: "DROP_MESSAGE",
           useFactory: (dependencies : Dependencies)=>{
             return createDropAnonymousTextMessage(dependencies)
+          },
+          inject: ["DEPENDENCIES"],
+        },
+        {
+          provide: "GRAB_MESSAGE",
+          useFactory: (dependencies : Dependencies)=>{
+            return createGrabMessage(dependencies)
           },
           inject: ["DEPENDENCIES"],
         },
@@ -49,8 +57,22 @@ describe('AppController', () => {
         content: 'Hellowwwww !!',
         messageId: 'message-0'
       })).toEqual({
-        receipt: 'http://grabit.com/receipt-0',
+        id: 'http://grabit.com/receipt-0',
         validUntil: '2024-06-05T12:36:57.986Z'
+      });
+    });
+
+    it('should grab ticket', async() => {
+      receiptRepository.wasDeliveredReceipt({id: "receipt-0", messageId: "message-0", validUntil: '2024-06-05T12:36:57.986Z'})
+      messageRepository.withMessage({
+        id: 'message-0',
+        at: '2024-06-05T12:36:57.986Z',
+        content: 'Hellow',
+        type: 'text'
+      })
+      expect(await appController.grab('receipt-0')).toEqual({
+        content: 'Hellow',
+        type: "text"
       });
     });
   });

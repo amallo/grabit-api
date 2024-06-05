@@ -25,7 +25,7 @@ export class ArangoDbReceiptRepository implements ReceiptRepository{
     async retrieve(receiptId: string): Promise<Receipt> {
         const Receipts = this.db.collection("receipts");
         
-        const receiptCursor = await this.db.query(aql`
+        const receiptCursor = await this.db.query<Receipt>(aql`
         FOR receipt IN ${Receipts}
         FILTER receipt.id == ${receiptId}
         RETURN receipt

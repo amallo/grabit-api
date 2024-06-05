@@ -3,7 +3,7 @@ import { MessageRepository } from "../../message.repository";
 
 export class FakeMessageRepository implements MessageRepository{
     private _messages: Record<string, Message> = {}
-    retrieve(messageId: string): Promise<Message | null> {
+    grab(messageId: string): Promise<Message | null> {
         return Promise.resolve(this._messages[messageId])
     }
     private _anonymouslyDroppedWith!: Message

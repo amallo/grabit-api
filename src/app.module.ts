@@ -4,6 +4,7 @@ import { createDropAnonymousTextMessage } from './core/messages/usecases/drop-an
 import { Dependencies, createDependencies } from './core/dependencies';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppConfig } from './core/common/config/config';
+import { createGrabMessage } from './core/messages/usecases/grab-message.usecase';
 
 
 @Module({
@@ -18,6 +19,13 @@ import { AppConfig } from './core/common/config/config';
       inject: ["DEPENDENCIES"],
     },
     {
+      provide: "GRAB_MESSAGE",
+      useFactory: (dependencies : Dependencies)=>{
+        return createGrabMessage(dependencies)
+      },
+      inject: ["DEPENDENCIES"],
+    },
+    {
       provide: "DEPENDENCIES",
       useFactory: (configService: ConfigService<AppConfig>)=>{
         return createDependencies({
@@ -25,6 +33,7 @@ import { AppConfig } from './core/common/config/config';
           DATABASE_NAME: configService.get("DATABASE_NAME"),
           DATABASE_PASSWORD: configService.get("DATABASE_PASSWORD"),
           DATABASE_USER: configService.get("DATABASE_USER"),
+          HOST_NAME : configService.get("HOST_NAME"),
         })
       },
       inject: [ConfigService]
