@@ -1,5 +1,4 @@
 import { NanoIdGenerator } from "./common/providers/nanoid.generator";
-import { createDropAnonymousTextMessage } from "./messages/usecases/drop-anonymous-message.usecase";
 import { EncryptMessageRepository } from "./messages/gateways/adapters/encrypt-message.repository";
 import { ArangoDbMessageRepository } from "./messages/gateways/adapters/arangodb/arangodb-message.repository";
 import { ArangoDbReceiptRepository } from "./messages/gateways/adapters/arangodb/arangodb-receipt.repository";
@@ -8,7 +7,6 @@ import { ReceiptRepository } from "./messages/gateways/receipt.repository";
 import { UrlGenerator } from "./messages/gateways/url-generator";
 import {Database} from 'arangojs'
 import { HostnameReceiptUrlGenerator } from "./messages/gateways/adapters/test/hostname-url.generator";
-import { createGrabMessage } from "./messages/usecases/grab-message.usecase";
 import { AppConfig } from "./common/config/config";
 
 export interface Dependencies {
@@ -18,10 +16,19 @@ export interface Dependencies {
 }
 
 export const createDependencies = (config: AppConfig): Dependencies =>{
-    const db = new Database({ databaseName: config.DATABASE_NAME, auth: {
-        username: config.DATABASE_USER, 
-        password: config.DATABASE_PASSWORD
-    }});
+    const db = new Database({ 
+        url: `http://${process.env.ARANGO_HOST}:${process.env.ARANGO_PORT}`,
+        databaseName: config.DATABASE_NAME,
+        auth: {
+            username: config.DATABASE_USER, 
+            password: config.DATABASE_PASSWORD
+        }
+    });
+    
+    db.listCollections()
+        .then((d)=> console.info("Db connection ok"))
+        .catch((e)=> console.error("Db connection failure", e))
+    
     const clearMessageRepository = new ArangoDbMessageRepository(db)
     const messageRepository = new EncryptMessageRepository(clearMessageRepository, config.DATABASE_ENCRYPTION_AT_REST)
 

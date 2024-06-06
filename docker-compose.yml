@@ -1,11 +1,28 @@
+
 services:
   arangodb:
-    image: arangodb/arangodb:3.11.8
+    image: arangodb/arangodb:3.12
+    container_name: arango
     ports:
-      - "8529:8529"
+      - "8529"
     environment:
       ARANGO_ROOT_PASSWORD: openSesame
-      encryption-keyfile: db-secret
     volumes:
       - ~/grabit:/var/lib/arangodb3
-  
+    
+
+  grabit:
+      build:
+        context: .
+        dockerfile: Dockerfile
+      container_name: grabit-api-doc
+      ports:
+        - "3001:3001"
+      depends_on:
+        arangodb:
+          condition: service_started   #zeazee
+      volumes:
+        - ./src:/app/src
+      environment:
+        - ARANGO_HOST=arango
+        - ARANGO_PORT=8529
